@@ -1,0 +1,42 @@
+<!-- include header -->
+<% include("include/_header") %>
+
+<!-- Main Site -->
+<main>
+    <h1>Habits of Mind Edit Entry</h1>
+    <label>Date <input type="date" class="date" /> <%= entry.date %> </label>
+    <div>
+        <h1 id="idDB"><%= id %></h1>
+        <fieldset>
+            <legend>Habit of Mind:</legend>
+            <% for(let habit of habits) { %>
+            <label>
+                <% if(habit === entry.habit) { %>
+                <input type="radio" class="habits" name="habits"
+                value="<%=habit%>" checked/>
+                <% } else { %>
+                    <input type="radio" class="habits" name="habits"
+                    value="<%=habit%>" />
+                <% } %>
+                <%=habit%>
+            </label>
+            <br/>
+            <% } %>
+            
+        </fieldset>
+
+        <label>Journal Entry <textarea class="content"><%= entry.content %></textarea></label>
+        <input type="submit" class="submit" value="Submit" />
+        
+        <button id="deleteEntry">Delete Entry</button>
+    </div>
+</main>
+
+<!-- End of Main Site -->
+
+
+<script src = "/js/deleteEntry.js"></script>
+<script src="/js/editEntry.js"></script>
+
+<!-- include footer -->
+<% include("include/_footer") %>
