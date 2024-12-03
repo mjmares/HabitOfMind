@@ -9,13 +9,31 @@
         <a href="/createEntry" role="button">Create Entry</a>
     </div>
 
+    <!-- Filter Section -->
+    <div class="filterSection">
+        <form action="/" method="GET">
+            <label for="habitFilter">Filter by Habit of Mind:</label>
+            <select name="habit" id="habitFilter">
+                <option value="">All</option>
+                <% for (let habit of habits) { %>
+                    <option value="<%= habit %>" <%= habit === selectedHabit ? "selected" : "" %>>
+                        <%= habit %>
+                    </option>
+                <% } %>
+            </select>
+            <button type="submit">Filter</button>
+        </form>
+    </div>    
+
     <div class="entries" id="entries">
-        <% for(let entry of entries) { %>
+        <% for (let entry of entries) { %>
             <div class="entry">
-                <div class="entryDate"><%=entry.date%></div>
-                <div class="entryHabit"><%=entry.habit%></div>
-                <div class="entryContent"><%=entry.content%></div>
-                <div><a href="/editEntry/<%=entry.id%>" role="button" class="secondary">Edit</a></div>
+                <div class="entryDate"><%= entry.date %></div>
+                <div class="entryHabit"><%= entry.habit %></div>
+                <div class="entryContent"><%= entry.content %></div>
+                <div>
+                    <a href="/editEntry/<%= entry.id %>" role="button" class="secondary">Edit</a>
+                </div>
             </div>
         <% } %>
     </div>

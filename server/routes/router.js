@@ -11,25 +11,37 @@ const habitsOfMind = require("../model/habitsOfMind.json");
 // When the client makes at HTTP GET request to this path
 // the callback function is executed
 route.get("/", async (req, res) => {
-    // Log the path to confirm the function is being called
-    console.log("Path Requested: " + req.path);
+    try {
+        const selectedHabit = req.query.habit || ""; // Get the filter parameter
+        let filter = {};
 
-    // The await keyword pauses the function until the database query is done
-    const entries = await Entry.find().sort({ date: -1 }); // Sort by date in descending order
-    
-    // Convert MongoDB objects to objects formatted for EJS
-    const formattedEntries = entries.map((entry) => {
-        return {
+        // If a habit filter is applied, add it to the MongoDB query filter
+        if (selectedHabit) {
+            filter.habit = selectedHabit;
+        }
+
+        // Fetch entries from the database with the filter
+        const entries = await Entry.find(filter);
+
+        // Format the entries if needed (e.g., toLocaleDateString)
+        const formattedEntries = entries.map(entry => ({
             id: entry._id,
             date: entry.date.toLocaleDateString(),
             habit: entry.habit,
-            content: entry.content.slice(0, 20) + "...",
-        };
-    });
+            content: entry.content,
+        }));
 
-    // The res parameter references the HTTP response object
-    res.render("index", { entries: formattedEntries });
+        res.render("index", {
+            entries: formattedEntries,
+            habits: habitsOfMind,
+            selectedHabit, // Pass to EJS to highlight the current selection
+        });
+    } catch (err) {
+        console.error("Error fetching entries:", err);
+        res.status(500).send("Internal Server Error");
+    }
 });
+
 
 
 route.get("/createEntry", (req, res) => {
